@@ -1,5 +1,9 @@
 {
+"scripts": {
+  "test": "cypress run"
+},
   "dependencies": {
     "cypress": "^14.0.3"
   }
+
 }
