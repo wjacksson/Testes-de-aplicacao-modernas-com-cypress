@@ -13,4 +13,11 @@ describe('helpers',()=>{
         const obj = {nome:'user', idade:29}
         cy.wrap(obj).its('nome').should('be.equal','user')
     })
+    it('Invoke...',()=>{
+        const getvalue =()=>1;
+
+        cy.wrap({fn:getvalue}).invoke('fn').should('be.equal', 1)
+        cy.visit('https://wcaquino.me/cypress/componentes.html')
+        cy.get('#formNome').invoke('val', 'Texto via Invoke')
+    })
 })

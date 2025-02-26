@@ -8,12 +8,12 @@ describe('cypress basic', () => {
             .should('be.equal', 'Campo de Treinamento')
     })
 
-    it.only('should click on button e get the value', ()=>{
+    it('should click on button e get the value', ()=>{
         cy.visit('https://wcaquino.me/cypress/componentes.html')
         cy.get('#buttonSimple')
             .click()
             .should('have.value','Obrigado!')
-
-    })
-
+   
+        })
+   
 })

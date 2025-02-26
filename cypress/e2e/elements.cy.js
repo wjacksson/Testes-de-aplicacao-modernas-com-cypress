@@ -17,7 +17,7 @@ describe('work with basic elements', ()=>{
 
     })
 
-    it.only('TextFields', ()=>{
+    it('TextFields', ()=>{
         cy.get('#formNome')
             .type('Jack')
             .should('have.value', 'Jack')
@@ -44,5 +44,10 @@ describe('work with basic elements', ()=>{
         cy.get('#elementosForm\\:sugestoes')
             .type('Manda a boa...')
             .should('have.value', 'Manda a boa...')
+    })
+    it('verifying the quantity of elements inside a array', ()=>{
+        cy.get('#formEscolaridade option')
+            .its('length')
+            .should('eq', 8)
     })
 })
