@@ -1,5 +1,5 @@
 
-describe('work with alerts', ()=>{
+describe('work with confirms', ()=>{
     beforeEach(()=>{
         cy.visit('https://wcaquino.me/cypress/componentes.html')
 
