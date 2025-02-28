@@ -1,4 +1,5 @@
 
+
 describe('work with iframes', ()=>{
     beforeEach(()=>{
         cy.visit('https://wcaquino.me/cypress/componentes.html')
@@ -12,5 +13,11 @@ describe('work with iframes', ()=>{
             .should('have.value','funciona')
         })  
     })
-
+    it.only('Must to test frame directly', ()=>{
+        cy.visit('https://wcaquino.me/cypress/frame.html')
+        cy.get('#otherButton').click()
+        cy.on('window:alert', msg =>{
+            expect(msg).to.eq('Click OK!')
+        })
+    })
 })
