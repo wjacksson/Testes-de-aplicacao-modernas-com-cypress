@@ -7,7 +7,17 @@ LOGIN:{
 MENU:{
     SETTING: '[data-test="menu-settings"]',
     CONTAS: '[href="/contas"]',
-    RESET: '[href="/reset"]'
+    RESET: '[href="/reset"]',
+    MOVIMENTACAO: '[data-test="menu-movimentacao"]',
+    HOME: '[data-test="menu-home"]'
+},
+MOVIMENTACAO:{
+    DERSCRICAO: '[data-test="descricao"]',
+    INTERESSADO: '[data-test="envolvido"]',
+    VALOR: '[data-test="valor"]',
+    CONTA: '[data-test="conta"]',
+    STATUS: '[data-test="status"]',
+    BTN_SALVAR: '[class="btn btn-block btn-primary"]'
 },
 CONTAS:{
     NOME: '[data-test="nome"]',
