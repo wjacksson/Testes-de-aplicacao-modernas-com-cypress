@@ -6,7 +6,7 @@ describe('work with differents selectors', () => {
 
     })
 it('Using Jquery selector',()=>{
-    cy.get('table#tabelaUsuarios tbody > tr td:contains("Doutorado"):eq(0) ~td:eq(3) > inputaaaaaaa')
+    cy.get('table#tabelaUsuarios tbody > tr td:contains("Doutorado"):eq(0) ~td:eq(3) > input')
 
 })
 })
