@@ -14,7 +14,6 @@ jobs:
       - name: Executar Cypress
         uses: cypress-io/github-action@v6
         with:
-          record: true
           browser: chrome
         env:
           CYPRESS_VIDEO: true
