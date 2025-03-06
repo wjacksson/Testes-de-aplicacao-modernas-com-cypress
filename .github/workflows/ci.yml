@@ -1,10 +1,30 @@
 name: End-to-end tests
 on: push
+
 jobs:
   cypress-run:
     runs-on: ubuntu-22.04
     steps:
-      - name: Checkout
+      - name: Checkout código
         uses: actions/checkout@v4
-      - name: Cypress run
+
+      - name: Instalar dependências
+        run: npm install
+
+      - name: Executar Cypress
         uses: cypress-io/github-action@v6
+        with:
+          record: true # Caso tenha dashboard do Cypress
+          browser: chrome # Usa navegador Chrome
+        env:
+          CYPRESS_VIDEO: true
+          CYPRESS_SCREENSHOT_ON_RUN_FAILURE: true
+
+      - name: Salvar screenshots e vídeos como artefatos
+        if: failure() # Apenas se o teste falhar
+        uses: actions/upload-artifact@v3
+        with:
+          name: cypress-artifacts
+          path: |
+            cypress/screenshots
+            cypress/videos
