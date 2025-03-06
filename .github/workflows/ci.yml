@@ -14,15 +14,15 @@ jobs:
       - name: Executar Cypress
         uses: cypress-io/github-action@v6
         with:
-          record: true # Caso tenha dashboard do Cypress
-          browser: chrome # Usa navegador Chrome
+          record: true
+          browser: chrome
         env:
           CYPRESS_VIDEO: true
           CYPRESS_SCREENSHOT_ON_RUN_FAILURE: true
 
       - name: Salvar screenshots e vídeos como artefatos
-        if: failure() # Apenas se o teste falhar
-        uses: actions/upload-artifact@v3
+        if: failure() # Apenas se os testes falharem
+        uses: actions/upload-artifact@v4 # Atualizado para v4
         with:
           name: cypress-artifacts
           path: |
