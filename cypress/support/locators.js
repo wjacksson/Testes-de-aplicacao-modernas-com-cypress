@@ -9,7 +9,8 @@ MENU:{
     CONTAS: '[href="/contas"]',
     RESET: '[href="/reset"]',
     MOVIMENTACAO: '[data-test="menu-movimentacao"]',
-    HOME: '[data-test="menu-home"]'
+    HOME: '[data-test="menu-home"]',
+    EXTRATO: '[data-test="menu-extrato"]'
 },
 MOVIMENTACAO:{
     DERSCRICAO: '[data-test="descricao"]',
