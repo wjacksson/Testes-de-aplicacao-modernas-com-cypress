@@ -63,7 +63,7 @@ describe("Your balley", () => {
     cy.get("td")
       .contains("Conta para saldo")
       .siblings("td")
-      .should("contain", "4.03499999,00");
+      .should("contain", "4.034,00");
   });
   it("Remove a transaction", () => {
     cy.get(loc.MENU.EXTRATO).click();
