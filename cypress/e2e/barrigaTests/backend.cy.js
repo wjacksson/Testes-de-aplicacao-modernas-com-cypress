@@ -80,6 +80,81 @@ describe("Should test with API", () => {
     });
   });
 
+  it("Should insert a transaction", () => {
+    let id;
+    cy.request({
+      method: "GET",
+      url: "/contas",
+      headers: {
+        Authorization: `JWT ${token}`,
+      },
+    }).then((response) => {
+      id = response.body[0].id;
+
+      cy.request({
+        method: "POST",
+        url: "/transacoes",
+        headers: {
+          Authorization: `JWT ${token}`,
+        },
+        body: {
+          conta_id: `${id}`,
+          data_transacao: new Date().toLocaleDateString("pt-BR"),
+          data_pagamento: new Date().toLocaleDateString("pt-BR"),
+          descricao: "testes",
+          envolvido: "jack",
+          status: false,
+          tipo: "REC",
+          valor: "123",
+        },
+      }).then((response) => {
+        expect(response.status).to.be.eq(201);
+        expect(response.body.descricao).to.be.eq("testes");
+      });
+    });
+
+    it("Should get balance", () => {
+      let saldo;
+      cy.request({
+        method: "GET",
+        url: "/saldo",
+        headers: {
+          Authorization: `JWT ${token}`,
+        },
+      }).then((response) => {
+        saldo = response.body[2].saldo;
+        expect(response.body[2].saldo).to.eq("534.00");
+      });
+
+      cy.request({
+        method: "PUT",
+        url: "/transacoes" / id,
+        headers: {
+          Authorization: `JWT ${token}`,
+        },
+        body: {
+          status: true,
+        },
+      }).then((response) => {
+        expect(response.status).to.be.eq(201);
+      });
+    });
+  });
+
+  it("Should get balance", () => {
+    let saldo;
+    cy.request({
+      method: "GET",
+      url: "/saldo",
+      headers: {
+        Authorization: `JWT ${token}`,
+      },
+    }).then((response) => {
+      saldo = response.body[2].saldo;
+      expect(response.body[2].saldo).to.eq("534.00");
+    });
+  });
+
   after(() => {
     cy.request({
       method: "GET",
