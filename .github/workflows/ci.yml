@@ -1,29 +1,41 @@
 name: End-to-end tests
-on: push
+
+on:
+  push:
 
 jobs:
-  cypress-run:
+  generate-matrix:
     runs-on: ubuntu-22.04
+    outputs:
+      tests: ${{ steps.set-matrix.outputs.tests }}
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Gerar lista de testes (it)
+        id: set-matrix
+        run: |
+          TESTS=$(grep -rohP "it\\(['\"]\\K.*?(?=['\"])" cypress/e2e | jq -R . | jq -s '{include: map({test: .})}')
+          echo "tests=$TESTS" >> $GITHUB_OUTPUT
+
+  cypress-run:
+    needs: generate-matrix
+    runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.generate-matrix.outputs.tests) }}
     steps:
       - name: Checkout código
         uses: actions/checkout@v4
 
       - name: Instalar dependências
-        run: npm install
+        run: npm ci
 
-      - name: Executar Cypress
+      - name: Executar Cypress (grep por it)
         uses: cypress-io/github-action@v6
         with:
           browser: chrome
+          command: npx cypress run --env grep="${{ matrix.test }}"
         env:
           CYPRESS_VIDEO: true
           CYPRESS_SCREENSHOT_ON_RUN_FAILURE: true
-
-      - name: Salvar screenshots e vídeos como artefatos
-        if: failure() # Apenas se os testes falharem
-        uses: actions/upload-artifact@v4 # Atualizado para v4
-        with:
-          name: cypress-artifacts
-          path: |
-            cypress/screenshots
-            cypress/videos
