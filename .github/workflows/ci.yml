@@ -1,36 +1,31 @@
 name: End-to-end tests
 
-on: 
+on:
   push:
 
 jobs:
   generate-matrix:
     runs-on: ubuntu-22.04
     outputs:
-      tests: ${{ steps.set-matrix.outputs.tests }}
+      specs: ${{ steps.set-matrix.outputs.specs }}
     steps:
       - name: Checkout código
         uses: actions/checkout@v4
 
-      - name: Gerar lista de testes (it)
+      - name: Gerar lista de specs
         id: set-matrix
         run: |
-          # Procura todos os títulos de "it('...')" nos specs
-          TESTS=$(grep -rohP "it\\(['\"]\\K.*?(?=['\"])" cypress/e2e \
-            | jq -R . \
-            | jq -s '{include: map({test: .})}')
-
-          # Compacta o JSON para uma linha (necessário pro Actions)
-          TESTS=$(echo "$TESTS" | jq -c .)
-
-          echo "tests=$TESTS" >> $GITHUB_OUTPUT
+          SPECS=$(find cypress/e2e -type f -name "*.cy.*" | jq -R . | jq -s '{include: map({spec: .})}')
+          SPECS=$(echo "$SPECS" | jq -c .)
+          echo "specs=$SPECS" >> $GITHUB_OUTPUT
 
   cypress-run:
     needs: generate-matrix
     runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
-      matrix: ${{ fromJSON(needs.generate-matrix.outputs.tests) }}
+      max-parallel: 3 # 👈 controla quantos jobs da matrix podem rodar ao mesmo tempo
+      matrix: ${{ fromJSON(needs.generate-matrix.outputs.specs) }}
     steps:
       - name: Checkout código
         uses: actions/checkout@v4
@@ -38,12 +33,11 @@ jobs:
       - name: Instalar dependências
         run: npm ci
 
-      - name: Executar Cypress (filtrado por it)
+      - name: Executar Cypress (por spec)
         uses: cypress-io/github-action@v6
         with:
           browser: chrome
-          # roda apenas o teste referente ao matrix.test
-          command: npx cypress run --env grep="${{ matrix.test }}"
+          command: npx cypress run --spec "${{ matrix.spec }}"
         env:
           CYPRESS_VIDEO: true
           CYPRESS_SCREENSHOT_ON_RUN_FAILURE: true
