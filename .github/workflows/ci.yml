@@ -37,7 +37,7 @@ jobs:
         uses: cypress-io/github-action@v6
         with:
           browser: chrome
-          command: npx cypress run --spec "${{ matrix.spec }}"
+          command: npx cypress run --spec ${{ matrix.spec }}
         env:
           CYPRESS_VIDEO: true
           CYPRESS_SCREENSHOT_ON_RUN_FAILURE: true
