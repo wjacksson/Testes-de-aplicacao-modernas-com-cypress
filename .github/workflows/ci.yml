@@ -1,6 +1,6 @@
 name: End-to-end tests
 
-on:
+on: 
   push:
 
 jobs:
@@ -15,7 +15,14 @@ jobs:
       - name: Gerar lista de testes (it)
         id: set-matrix
         run: |
-          TESTS=$(grep -rohP "it\\(['\"]\\K.*?(?=['\"])" cypress/e2e | jq -R . | jq -s '{include: map({test: .})}')
+          # Procura todos os títulos de "it('...')" nos specs
+          TESTS=$(grep -rohP "it\\(['\"]\\K.*?(?=['\"])" cypress/e2e \
+            | jq -R . \
+            | jq -s '{include: map({test: .})}')
+
+          # Compacta o JSON para uma linha (necessário pro Actions)
+          TESTS=$(echo "$TESTS" | jq -c .)
+
           echo "tests=$TESTS" >> $GITHUB_OUTPUT
 
   cypress-run:
@@ -31,10 +38,11 @@ jobs:
       - name: Instalar dependências
         run: npm ci
 
-      - name: Executar Cypress (grep por it)
+      - name: Executar Cypress (filtrado por it)
         uses: cypress-io/github-action@v6
         with:
           browser: chrome
+          # roda apenas o teste referente ao matrix.test
           command: npx cypress run --env grep="${{ matrix.test }}"
         env:
           CYPRESS_VIDEO: true
